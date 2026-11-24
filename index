@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>30-Day AI Mastery Progress Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    };
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(113, 113, 122, 0.15);
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(113, 113, 122, 0.4);
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="min-h-screen antialiased pb-12 bg-[#f4f4f5] text-zinc-900 dark:bg-[#09090b] dark:text-zinc-100 transition-colors duration-300">
+
+  <!-- Top Navigation / Header (Option 4: Clean Studio & Carbon Slate) -->
+  <header class="bg-white/95 dark:bg-[#121216]/95 backdrop-blur-md text-zinc-900 dark:text-zinc-100 border-b border-zinc-200 dark:border-zinc-800 sticky top-0 z-30 transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-violet-600 flex items-center justify-center text-white font-bold text-lg shadow-sm">
+          AI
+        </div>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <h1 class="text-lg sm:text-xl font-bold text-zinc-900 dark:text-white tracking-tight">30-Day AI Mastery &amp; Builder</h1>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-violet-100 text-violet-800 border border-violet-300 dark:bg-violet-500/20 dark:text-violet-300 dark:border-violet-500/40">
+              Gemini 4 Hydrogen
+            </span>
+          </div>
+          <p class="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">1 Hr Office (Phone) + 2 Hrs Home (Laptop) • Post-Diwali Sprint</p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- Day / Night Mode Toggle -->
+        <button id="theme-toggle-btn" onclick="toggleThemeMode()" class="px-3 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 text-xs font-semibold transition border border-zinc-300 dark:border-zinc-700">
+          ☀ Light Mode
+        </button>
+        <button onclick="markNextDayComplete()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 active:scale-95 text-white text-xs sm:text-sm font-semibold shadow-sm transition">
+          + Complete Next Day
+        </button>
+        <button onclick="resetToDefault()" class="px-3 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 active:scale-95 text-zinc-700 dark:text-zinc-300 text-xs sm:text-sm font-medium transition border border-zinc-300 dark:border-zinc-700">
+          Reset
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
+
+    <!-- Top 4 KPI Summary Cards (All Interactive & Clickable) -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- KPI 1: Completion -->
+      <button onclick="openKpiModal('completion')" class="text-left bg-white dark:bg-[#121216] hover:bg-cyan-50/40 dark:hover:bg-zinc-900/90 rounded-2xl p-5 border border-zinc-200 dark:border-zinc-800 hover:border-cyan-500 dark:hover:border-cyan-500/60 shadow-sm flex flex-col justify-between transition active:scale-[0.99] group">
+        <div class="flex items-center justify-between w-full">
+          <span class="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 group-hover:text-cyan-700 dark:group-hover:text-cyan-400">Overall Completion ↗</span>
+          <span class="p-2 rounded-lg bg-cyan-50 text-cyan-700 dark:bg-cyan-500/15 dark:text-cyan-400">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </span>
+        </div>
+        <div class="mt-4 w-full">
+          <div class="flex items-baseline gap-2">
+            <span id="kpi-percent" class="text-3xl font-bold text-zinc-900 dark:text-white">13.3%</span>
+            <span id="kpi-days" class="text-sm font-medium text-zinc-500 dark:text-zinc-400">(4 / 30 Days)</span>
+          </div>
+          <div class="w-full bg-zinc-200 dark:bg-zinc-800 rounded-full h-2.5 mt-3 overflow-hidden">
+            <div id="kpi-progress-bar" class="bg-gradient-to-r from-cyan-500 to-violet-500 h-2.5 rounded-full transition-all duration-500" style="width: 13.3%"></div>
+          </div>
+          <p class="text-[11px] text-cyan-700 dark:text-cyan-400 font-medium mt-2">Tap to view pace &amp; catch-up days</p>
+        </div>
+      </button>
+
+      <!-- KPI 2: Confidence Score -->
+      <button onclick="openKpiModal('confidence')" class="text-left bg-white dark:bg-[#121216] hover:bg-violet-50/40 dark:hover:bg-zinc-900/90 rounded-2xl p-5 border border-zinc-200 dark:border-zinc-800 hover:border-violet-500 dark:hover:border-violet-500/60 shadow-sm flex flex-col justify-between transition active:scale-[0.99] group">
+        <div class="flex items-center justify-between w-full">
+          <span class="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 group-hover:text-violet-700 dark:group-hover:text-violet-400">Avg. Confidence Score ↗</span>
+          <span class="p-2 rounded-lg bg-violet-50 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+          </span>
+        </div>
+        <div class="mt-4 w-full">
+          <div class="flex items-baseline gap-2">
+            <span id="kpi-confidence" class="text-3xl font-bold text-zinc-900 dark:text-white">5.0</span>
+            <span class="text-sm font-medium text-zinc-500 dark:text-zinc-400">/ 5.0</span>
+          </div>
+          <p class="text-xs text-violet-700 dark:text-violet-400 font-medium mt-2">Tap to view daily skill ratings</p>
+        </div>
+      </button>
+
+      <!-- KPI 3: Earned Credentials & Portfolio Showcase -->
+      <button onclick="openKpiModal('portfolio')" class="text-left bg-white dark:bg-[#121216] hover:bg-emerald-50/40 dark:hover:bg-zinc-900/90 rounded-2xl p-5 border border-zinc-200 dark:border-zinc-800 hover:border-emerald-500 dark:hover:border-emerald-500/60 shadow-sm flex flex-col justify-between transition active:scale-[0.99] group">
+        <div class="flex items-center justify-between w-full">
+          <span class="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 group-hover:text-emerald-700 dark:group-hover:text-emerald-400">Portfolio Assets Saved ↗</span>
+          <span class="p-2 rounded-lg bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+          </span>
+        </div>
+        <div class="mt-4 w-full">
+          <div class="flex items-baseline gap-2">
+            <span id="kpi-assets" class="text-3xl font-bold text-zinc-900 dark:text-white">4</span>
+            <span class="text-sm font-medium text-zinc-500 dark:text-zinc-400">Builds in Drive</span>
+          </div>
+          <p class="text-xs text-emerald-700 dark:text-emerald-400 font-semibold mt-2 truncate">Tap to view your built portfolio →</p>
+        </div>
+      </button>
+
+      <!-- KPI 4: Focus / Improvement Area (Mentor Guidance) -->
+      <button onclick="openKpiModal('improve')" class="text-left bg-[#c2593f]/10 dark:bg-[#c2593f]/20 hover:bg-[#c2593f]/15 dark:hover:bg-[#c2593f]/25 rounded-2xl p-5 border border-[#c2593f]/40 dark:border-[#e06d53]/50 shadow-sm flex flex-col justify-between transition active:scale-[0.99] group">
+        <div class="flex items-center justify-between w-full">
+          <span class="text-xs font-semibold uppercase tracking-wider text-[#9a3f28] dark:text-orange-300">Where to Improve Next ↗</span>
+          <span class="p-2 rounded-lg bg-[#c2593f]/15 dark:bg-[#e06d53]/20 text-[#9a3f28] dark:text-orange-300">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </span>
+        </div>
+        <div class="mt-4 w-full">
+          <div id="kpi-weakest" class="text-base font-bold text-zinc-900 dark:text-white leading-snug">Day 05: NotebookLM</div>
+          <p id="kpi-weakest-desc" class="text-xs text-[#9a3f28] dark:text-orange-300 font-medium mt-1.5">Tap for step-by-step mentor guidance →</p>
+        </div>
+      </button>
+    </section>
+
+    <!-- Middle Grid: Interactive Vertical Skill Mastery Radar & Mentor Focus Card -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Skill Mastery & Vertical 100% Progress Radar (2 Cols on lg) -->
+      <div class="lg:col-span-2 bg-white dark:bg-[#121216] rounded-2xl p-5 sm:p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
+          <div>
+            <h2 class="text-base sm:text-lg font-bold text-zinc-900 dark:text-white">Skill Mastery &amp; Improvement Radar</h2>
+            <p class="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">Tap any vertical skill column or skill header to open its topic submenu (0% to 100%)</p>
+          </div>
+          <span id="active-skill-label" class="text-xs font-semibold px-3 py-1 rounded-full bg-cyan-50 text-cyan-800 border border-cyan-200 dark:bg-cyan-500/15 dark:text-cyan-300 dark:border-cyan-500/30 self-start sm:self-center">
+            Selected: Gemini Pro &amp; Research
+          </span>
+        </div>
+
+        <!-- Vertical 100% Progress Columns for All 7 Skills -->
+        <div class="bg-zinc-50 dark:bg-zinc-900/80 rounded-2xl p-4 border border-zinc-200/80 dark:border-zinc-800 mb-5">
+          <div class="flex items-center justify-between text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-3">
+            <span>100% Mastery Target</span>
+            <span>Tap any bar to expand topics</span>
+          </div>
+          <div id="vertical-skills-chart" class="grid grid-cols-7 gap-2 sm:gap-3 items-end h-40 pt-2">
+            <!-- Dynamically populated vertical bars -->
+          </div>
+        </div>
+
+        <!-- Expandable Skills List with Topic Submenus -->
+        <div id="skills-container" class="space-y-2.5">
+          <!-- Dynamically populated skill headers + submenus -->
+        </div>
+      </div>
+
+      <!-- Mentor Action & Improvement Plan (1 Col on lg) -->
+      <div class="bg-white dark:bg-[#121216] rounded-2xl p-5 sm:p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm flex flex-col justify-between">
+        <div>
+          <h2 class="text-base sm:text-lg font-bold text-zinc-900 dark:text-white mb-1">Mentor Action Checklist</h2>
+          <p class="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mb-4">Your immediate focus areas to level up</p>
+
+          <div class="space-y-3">
+            <div class="p-3.5 rounded-xl bg-emerald-50/80 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-500/40">
+              <div class="flex items-center gap-2 text-emerald-900 dark:text-emerald-300 font-semibold text-xs sm:text-sm mb-1">
+                <span>✓ Strongest Builds: Days 1–4 Complete</span>
+              </div>
+              <p class="text-xs text-emerald-800 dark:text-emerald-200/80 leading-relaxed">
+                5.0/5 confidence across Days 1–4. You earned 2 Google Cloud Badges, saved 5 Master Prompts, built 6 Custom Skills, and completed Day 04 Deep Research.
+              </p>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-[#c2593f]/10 dark:bg-[#c2593f]/20 border border-[#c2593f]/30 dark:border-[#e06d53]/50">
+              <div class="flex items-center gap-2 text-[#9a3f28] dark:text-orange-300 font-semibold text-xs sm:text-sm mb-1">
+                <span>⚡ Priority Focus: Day 05 NotebookLM</span>
+              </div>
+              <p class="text-xs text-[#7c3220] dark:text-orange-200/90 leading-relaxed">
+                Gemini Pro &amp; Research is now at 40% (2/5). Next step: upload your Deep Research findings + 5 YouTube links into <strong>NotebookLM</strong> to generate your 5-Chapter Playbook Outline.
+              </p>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+              <div class="text-xs font-semibold text-zinc-800 dark:text-zinc-200 mb-1">Portfolio Folder Sync</div>
+              <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                Folder: <code class="bg-zinc-200/80 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-zinc-800 dark:text-cyan-300">00_30- Day Ai Mastery Portfolio</code><br/>
+                Save your Day 04 Deep Research report inside Drive so all 4 builds stay backed up.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5 pt-4 border-t border-zinc-200 dark:border-zinc-800">
+          <div class="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400 mb-1">
+            <span>Next Milestone Target</span>
+            <span class="font-semibold text-zinc-800 dark:text-zinc-200">Day 05 NotebookLM Outline</span>
+          </div>
+          <p class="text-xs text-zinc-500 dark:text-zinc-400">Complete Days 5–7 to finish your 15-page digital playbook text draft.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Calendar Date Plan Section -->
+    <section id="calendar-section" class="bg-white dark:bg-[#121216] rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm p-5 sm:p-6 scroll-mt-24">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <h2 class="text-base sm:text-lg font-bold text-zinc-900 dark:text-white">Interactive 30-Day Calendar Plan</h2>
+            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-violet-100 text-violet-800 border border-violet-300 dark:bg-violet-500/20 dark:text-violet-300 dark:border-violet-500/40">
+              Synced: Nov 24, 2026 (Day 04 Done)
+            </span>
+          </div>
+          <p class="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">Tap any date to view completed resources, mark a day as completed, or log a Terracotta "No Action Taken" day with your reflection</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3 text-xs text-zinc-600 dark:text-zinc-400">
+          <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Done</span>
+          <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#e06d53]"></span> No Action Taken</span>
+          <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-violet-500"></span> Next Focus</span>
+          <span class="inline-flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-zinc-400 dark:bg-zinc-600"></span> Upcoming</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Calendar Grid (7 Cols on lg) -->
+        <div class="lg:col-span-7 bg-zinc-50 dark:bg-zinc-900/70 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-4">
+          <div class="flex items-center justify-between mb-3 px-1">
+            <span class="text-sm font-bold text-zinc-900 dark:text-white">November – December 2026 (30-Day Sprint)</span>
+            <button onclick="selectCalendarDay(5)" class="text-xs font-semibold text-cyan-700 dark:text-cyan-400 hover:underline">
+              Jump to Day 05 (Next Task)
+            </button>
+          </div>
+          <div class="grid grid-cols-7 gap-1.5 text-center text-[11px] font-semibold text-zinc-400 uppercase pb-2">
+            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+          </div>
+          <div id="calendar-grid" class="grid grid-cols-7 gap-1.5 sm:gap-2">
+            <!-- Dynamically populated calendar cells -->
+          </div>
+        </div>
+
+        <!-- Selected Date Detail Card (5 Cols on lg) -->
+        <div id="calendar-detail-panel" class="lg:col-span-5 bg-zinc-50 dark:bg-zinc-900/90 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-5 flex flex-col justify-between shadow-sm scroll-mt-24">
+          <!-- Dynamically populated when a date is tapped -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Interactive Modal for Top 4 KPI Cards & Portfolio / Mentor Guidance -->
+  <div id="kpi-modal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-[#121216] rounded-2xl border border-zinc-200 dark:border-zinc-800 max-w-2xl w-full max-h-[88vh] overflow-y-auto shadow-2xl">
+      <div class="p-5 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between sticky top-0 bg-white dark:bg-[#121216] z-10">
+        <h3 id="kpi-modal-title" class="text-base sm:text-lg font-bold text-zinc-900 dark:text-white">Details</h3>
+        <button onclick="closeKpiModal()" class="p-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 text-xs font-bold">✕ Close</button>
+      </div>
+      <div id="kpi-modal-body" class="p-5 space-y-4">
+        <!-- Dynamically injected -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const initialRoadmap = [
+      {
+        day: 1, dateLabel: "Nov 2", week: "Week 1", skill: "Prompt Engineering",
+        study: "Google Cloud Intro to Gen AI & Intro to LLMs",
+        build: "2 Badges saved in 01- Badges and Certificates",
+        status: "Completed", score: 5,
+        summary: "Learned core foundations of Generative AI and how Large Language Models predict text and follow instructions.",
+        resourceTitle: "Google Cloud Skills Boost — Intro to Generative AI Path",
+        resourceUrl: "https://www.skills.google/paths/118",
+        whatResourceProvides: "Official short video modules and quizzes explaining generative AI concepts, model types, and real-world applications.",
+        howItHelps: "Builds rock-solid foundational confidence and earns official Google Cloud completion badges you can showcase on your freelance portfolio."
+      },
+      {
+        day: 2, dateLabel: "Nov 3", week: "Week 1", skill: "Prompt Engineering",
+        study: "Jeff Su 6-Part Prompt Formula",
+        build: "5 Master Prompt Templates saved in 02- Prompt Library",
+        status: "Completed", score: 5,
+        summary: "Mastered the 6-part prompt structure: Task, Context, Exemplars, Persona, Format, and Tone.",
+        resourceTitle: "YouTube: Master the Perfect AI Prompt Formula (Jeff Su)",
+        resourceUrl: "https://www.youtube.com/watch?v=jC4v5AS4RIM",
+        whatResourceProvides: "A clear, practical breakdown showing how ordering your instructions properly eliminates vague AI outputs.",
+        howItHelps: "Gives you 5 plug-and-play prompt templates that translate rough Gujarati/Hindi ideas into clean, professional English copy."
+      },
+      {
+        day: 3, dateLabel: "Nov 17–24", week: "Week 1", skill: "Gemini Pro & Research",
+        study: "Paul J Lipsky Gemini Gems & Custom Skills Mastery",
+        build: "6 Custom Skills built & verified in 03- Google Gems (5.0/5)",
+        status: "Completed", score: 5,
+        summary: "Built and live-tested 6 specialized AI Skills (Playbook Architect, Polished English Copy Editor, 6-Part Master Prompt Architect, Ready-to-Use Prompt Optimizer, On-Brand Infographics, and Generate Fresh Ideas) with Knowledge docs.",
+        resourceTitle: "YouTube: 7 Mind Blowing Use Cases For Gemini Gems (Paul J Lipsky)",
+        resourceUrl: "https://www.youtube.com/watch?v=nOYeOvw-Sgw",
+        whatResourceProvides: "Step-by-step walkthrough of creating custom Gems, attaching Google Drive files, and opening Gems inside Google Docs.",
+        howItHelps: "Saves hours of repetitive prompting by turning Gemini into 6 dedicated specialists for editing English, infographics, and writing digital guides."
+      },
+      {
+        day: 4, dateLabel: "Nov 24", week: "Week 1", skill: "Gemini Pro & Research",
+        study: "Gemini Deep Research Market Validation",
+        build: "Deep Research market report completed & niches validated (5.0/5)",
+        status: "Completed", score: 5,
+        summary: "Completed Gemini Deep Research scan across top-selling digital PDF playbooks and printable coloring book niches to validate buyer demand.",
+        resourceTitle: "YouTube: How To Use Deep Research in Gemini (Step-by-Step)",
+        resourceUrl: "https://www.youtube.com/watch?v=v8KQm8fhJfo",
+        whatResourceProvides: "Demonstrates how Gemini browses dozens of web pages automatically and compiles a structured market research report.",
+        howItHelps: "Ensures you build a proven, high-demand digital product before writing or designing."
+      },
+      {
+        day: 5, dateLabel: "Nov 25", week: "Week 1", skill: "Gemini Pro & Research",
+        study: "Tina Huang NotebookLM Masterclass",
+        build: "Upload Deep Research + 5 YouTube links & build 5-Chapter Outline",
+        status: "Pending", score: 0,
+        summary: "Gather your Day 04 Deep Research report plus 5 YouTube videos and 3 articles on your Playbook topic, upload them to NotebookLM, and generate an outline.",
+        resourceTitle: "Tina Huang YouTube Channel (NotebookLM Tutorials)",
+        resourceUrl: "https://www.youtube.com/c/tinahuang1/videos",
+        whatResourceProvides: "Practical guide on grounding AI responses strictly in your trusted sources without hallucinations.",
+        howItHelps: "Turns scattered YouTube tutorials and articles into a structured, accurate 5-chapter digital playbook blueprint."
+      },
+      {
+        day: 6, dateLabel: "Nov 26", week: "Week 1", skill: "Gemini Pro & Research",
+        study: "Dan Martell Playbook Structure",
+        build: "Write 15-page Playbook draft in Google Docs (Playbook Architect Gem)",
+        status: "Pending", score: 0,
+        summary: "Draft all 5 chapters of your Digital Playbook inside Google Docs using Gemini 4 Hydrogen and your Playbook Architect Gem.",
+        resourceTitle: "Dan Martell YouTube Channel (AI Playbooks & Workflows)",
+        resourceUrl: "https://www.youtube.com/@danmartell/videos",
+        whatResourceProvides: "Teaches how to package practical step-by-step knowledge into high-value action playbooks.",
+        howItHelps: "Produces your first complete 15-page written digital product asset ready for visual formatting."
+      },
+      {
+        day: 7, dateLabel: "Nov 27", week: "Week 1", skill: "Gemini Pro & Research",
+        study: "NotebookLM Audio Overview Review",
+        build: "Polish 15-page Playbook English & save in 04- Drafts",
+        status: "Pending", score: 0,
+        summary: "Listen to an AI podcast summary of your own draft in NotebookLM and run a final clean English polish using your Polished English Copy Editor Gem.",
+        resourceTitle: "Google NotebookLM Official Workspace",
+        resourceUrl: "https://notebooklm.google.com/",
+        whatResourceProvides: "Generates an interactive two-host audio discussion from your uploaded Google Doc so you can spot weak sections.",
+        howItHelps: "Guarantees your written product flows smoothly and reads naturally before you design it in Canva."
+      },
+      {
+        day: 8, dateLabel: "Nov 28", week: "Week 2", skill: "Canva & Design",
+        study: "Aurelius Tjin Canva in 25 Mins",
+        build: "Lay out Chapters 1-3 in Canva",
+        status: "Pending", score: 0,
+        summary: "Learn Canva's core layout tools, typography pairing, and grids, then format Chapters 1–3 of your Playbook.",
+        resourceTitle: "Aurelius Tjin YouTube Channel (Canva Mastery)",
+        resourceUrl: "https://www.youtube.com/c/AureliusTjin/videos",
+        whatResourceProvides: "Fast, beginner-friendly visual walkthrough of Canva templates, alignment guides, and clean document styling.",
+        howItHelps: "Transforms plain Google Doc text into a clean, modern digital product layout without needing graphic design experience."
+      },
+      {
+        day: 9, dateLabel: "Nov 29", week: "Week 2", skill: "Canva & Design",
+        study: "Aurelius Tjin Ebook Creation",
+        build: "Export 15-page Designed PDF Playbook in 05- Canva Design",
+        status: "Pending", score: 0,
+        summary: "Complete Chapters 4–5 in Canva, design a bold cover page, and export your finished e-book as a PDF.",
+        resourceTitle: "Aurelius Tjin YouTube (How To Create & Sell Ebooks)",
+        resourceUrl: "https://www.youtube.com/c/AureliusTjin/videos",
+        whatResourceProvides: "Shows cover design principles, table of contents formatting, and proper PDF export settings for digital downloads.",
+        howItHelps: "Gives you a finished, sellable ₹499 ($7) digital PDF product saved in your portfolio."
+      },
+      {
+        day: 10, dateLabel: "Nov 30", week: "Week 2", skill: "Canva & Design",
+        study: "Canva AI Coloring Book Tutorial",
+        build: "Generate 12 clean black-and-white AI coloring pages",
+        status: "Pending", score: 0,
+        summary: "Use Gemini and free AI image tools to generate 12 crisp, thick-line black-and-white coloring book pages.",
+        resourceTitle: "YouTube: How To Create Coloring Books in Canva Using AI",
+        resourceUrl: "https://www.youtube.com/watch?v=MWzklfKh-QY",
+        whatResourceProvides: "Demonstrates exact prompting rules to avoid gray shading and produce clean printable line art.",
+        howItHelps: "Adds a second evergreen digital product category (printable coloring books) to your creator skillset."
+      },
+      {
+        day: 11, dateLabel: "Dec 1", week: "Week 2", skill: "Canva & Design",
+        study: "Etsy/KDP Coloring Book Formatting",
+        build: "Format 8.5x11 print-ready PDF + 3D Mockups",
+        status: "Pending", score: 0,
+        summary: "Assemble your 12 coloring pages into an 8.5x11 inch print-ready PDF and generate 3D book/iPad mockups.",
+        resourceTitle: "YouTube: Coloring Book Pages Using Canva AI",
+        resourceUrl: "https://www.youtube.com/watch?v=qknuTAq7B7Q",
+        whatResourceProvides: "Covers standard printable page dimensions, safe print margins, and realistic 3D product mockups.",
+        howItHelps: "Makes your PDFs look like real physical books and tablet apps on your landing page and Gumroad store."
+      },
+      {
+        day: 12, dateLabel: "Dec 2", week: "Week 2", skill: "Faceless Content",
+        study: "Canva Bulk Create Carousels",
+        build: "Create 3 7-slide faceless carousels",
+        status: "Pending", score: 0,
+        summary: "Turn tips from your Playbook into three 7-slide Instagram/LinkedIn carousels using Canva Bulk Create.",
+        resourceTitle: "Aurelius Tjin YouTube (Canva Bulk Create Tutorials)",
+        resourceUrl: "https://www.youtube.com/c/AureliusTjin/videos",
+        whatResourceProvides: "Teaches how to connect a table of AI-written tips to a Canva template to generate multiple slides at once.",
+        howItHelps: "Lets you create faceless educational posts in minutes without ever showing your face on camera."
+      },
+      {
+        day: 13, dateLabel: "Dec 3", week: "Week 2", skill: "Faceless Content",
+        study: "Canva Video & ElevenLabs Voice",
+        build: "Create 2 faceless AI voice Reels/Shorts",
+        status: "Pending", score: 0,
+        summary: "Generate natural AI voiceovers on ElevenLabs (free tier) and pair them with stock clips and captions in Canva Video.",
+        resourceTitle: "ElevenLabs Free AI Voice & Canva Video",
+        resourceUrl: "https://elevenlabs.io/",
+        whatResourceProvides: "Realistic text-to-speech voice generation combined with simple drag-and-drop vertical video editing.",
+        howItHelps: "Enables you to publish engaging short-form videos on Reels and Shorts while keeping your introvert privacy."
+      },
+      {
+        day: 14, dateLabel: "Dec 4", week: "Week 2", skill: "Canva & Design",
+        study: "Week 2 Portfolio Audit",
+        build: "Verify all PDFs, Mockups, Carousels & Reels in Drive",
+        status: "Pending", score: 0,
+        summary: "Review and organize all Week 2 visual assets inside your Google Drive portfolio folders.",
+        resourceTitle: "Canva Free Design Workspace",
+        resourceUrl: "https://www.canva.com/",
+        whatResourceProvides: "Central cloud hub for all your e-book layouts, coloring book pages, mockups, and social videos.",
+        howItHelps: "Ensures every visual asset is clean, error-free, and ready to showcase on your Week 3 landing page."
+      },
+      {
+        day: 15, dateLabel: "Dec 5", week: "Week 3", skill: "No-Code Apps & Web",
+        study: "Riley Brown Vibe Coding Course",
+        build: "Write landing page copy + test Gemini 4 Hydrogen Canvas",
+        status: "Pending", score: 0,
+        summary: "Learn 'Vibe Coding'—describing website layouts in plain English so AI builds responsive frontend code automatically.",
+        resourceTitle: "YouTube: Vibe Coding Full Course for Beginners",
+        resourceUrl: "https://www.youtube.com/watch?v=RKOXmCK4Khw",
+        whatResourceProvides: "Explains how non-coders prompt AI to structure hero sections, feature grids, FAQs, and interactive UI.",
+        howItHelps: "Unlocks the ability to build custom websites and web apps without writing traditional code from scratch."
+      },
+      {
+        day: 16, dateLabel: "Dec 6", week: "Week 3", skill: "No-Code Apps & Web",
+        study: "Lovable.dev Landing Page Guide",
+        build: "Publish live Landing Page URL with 3D mockups",
+        status: "Pending", score: 0,
+        summary: "Build and publish a mobile-responsive sales landing page for your Playbook on Lovable.dev with your 3D mockups.",
+        resourceTitle: "Lovable.dev No-Code AI Web Builder",
+        resourceUrl: "https://lovable.dev/",
+        whatResourceProvides: "Turns plain-English prompts and mockup images into a hosted, live website with one-click publishing.",
+        howItHelps: "Gives your digital product a professional storefront website you can share anywhere online."
+      },
+      {
+        day: 17, dateLabel: "Dec 7", week: "Week 3", skill: "No-Code Apps & Web",
+        study: "Google AI Studio Web App Guide",
+        build: "Build 1-page AI Web App using gemini-4-hydrogen",
+        status: "Pending", score: 0,
+        summary: "Build an interactive 1-page 'Office English & Prompt Polisher' web tool powered by Gemini 4 Hydrogen.",
+        resourceTitle: "Google AI Studio (Build with Gemini 4 Hydrogen)",
+        resourceUrl: "https://aistudio.google.com/",
+        whatResourceProvides: "Free developer sandbox to test Gemini 4 Hydrogen and generate working web app prototypes.",
+        howItHelps: "Gives you a real, functional AI micro-app you can offer as a free bonus or freelance portfolio piece."
+      },
+      {
+        day: 18, dateLabel: "Dec 8", week: "Week 3", skill: "No-Code Apps & Web",
+        study: "Shawn Builds AI / Greg Isenberg App",
+        build: "Test mobile view & embed Mini App on Landing Page",
+        status: "Pending", score: 0,
+        summary: "Refine your mini web app for mobile screens and link it as a free interactive bonus on your landing page.",
+        resourceTitle: "Shawn's AI Builds YouTube Channel",
+        resourceUrl: "https://www.youtube.com/@shawn.builds/videos",
+        whatResourceProvides: "Real-world demonstrations of polishing micro-apps, adding preset buttons, and improving user experience.",
+        howItHelps: "Makes your product stand out from ordinary PDFs by bundling an actual working AI tool."
+      },
+      {
+        day: 19, dateLabel: "Dec 9", week: "Week 3", skill: "AI Automation",
+        study: "Dan Martell AI Agents Guide",
+        build: "Map workflow + test Gemini in Google Sheets",
+        status: "Pending", score: 0,
+        summary: "Map a 3-step automated workflow (Trigger → AI Brain → Action) and test Gemini inside Google Sheets.",
+        resourceTitle: "Dan Martell YouTube (AI Agents & Automation)",
+        resourceUrl: "https://www.youtube.com/@danmartell/videos",
+        whatResourceProvides: "Clear mental model for connecting triggers, AI reasoning, and automated outputs without manual copy-pasting.",
+        howItHelps: "Teaches you how to automate repetitive content creation and data tasks in your daily work."
+      },
+      {
+        day: 20, dateLabel: "Dec 10", week: "Week 3", skill: "AI Automation",
+        study: "Nick Saraev Make.com / n8n Course",
+        build: "Build live Google Sheets + Gemini API automation",
+        status: "Pending", score: 0,
+        summary: "Connect Google Sheets to Gemini 4 Hydrogen in Make.com so adding a topic row auto-generates social captions.",
+        resourceTitle: "Nick Saraev YouTube Playlists (Make.com & n8n)",
+        resourceUrl: "https://www.youtube.com/@nicksaraev/playlists",
+        whatResourceProvides: "Step-by-step tutorials on connecting app modules, mapping variables, and running automated scenarios.",
+        howItHelps: "Builds a real no-code automation engine that saves hours of weekly marketing work."
+      },
+      {
+        day: 21, dateLabel: "Dec 11", week: "Week 3", skill: "No-Code Apps & Web",
+        study: "Week 3 Capstone Selection",
+        build: "Test all 3 sample projects & pick flagship launch offer",
+        status: "Pending", score: 0,
+        summary: "Test your Playbook, Coloring Book, Landing Page, Mini Web App, and Automation to lock in your Week 4 launch bundle.",
+        resourceTitle: "Mobbin UI & Landing Page Design Inspiration",
+        resourceUrl: "https://mobbin.com/",
+        whatResourceProvides: "Library of top-performing modern app and website layouts for final visual polish.",
+        howItHelps: "Ensures every piece of your capstone offer works smoothly before you open your store to buyers."
+      },
+      {
+        day: 22, dateLabel: "Dec 12", week: "Week 4", skill: "Storefront & Portfolio",
+        study: "Aurelius Tjin Gumroad Store Guide",
+        build: "Launch Free Sample ($0+) & Paid Bundle on Gumroad",
+        status: "Pending", score: 0,
+        summary: "Set up your free Gumroad storefront and upload both a Free 3-Page Lead Magnet and your Paid Playbook Bundle.",
+        resourceTitle: "Gumroad Free Digital Storefront",
+        resourceUrl: "https://gumroad.com/",
+        whatResourceProvides: "Zero-monthly-fee digital storefront that handles file delivery, global payments, and customer emails.",
+        howItHelps: "Allows you to start collecting leads and selling digital products worldwide with ₹0 upfront investment."
+      },
+      {
+        day: 23, dateLabel: "Dec 13", week: "Week 4", skill: "Storefront & Portfolio",
+        study: "Aurelius Tjin Creator Website Guide",
+        build: "Connect Landing Page buttons to Gumroad checkout",
+        status: "Pending", score: 0,
+        summary: "Link the 'Get Free Sample' and 'Buy Full Playbook' buttons on your Lovable landing page directly to Gumroad.",
+        resourceTitle: "Lovable.dev Live Deployment",
+        resourceUrl: "https://lovable.dev/",
+        whatResourceProvides: "Instant publishing updates so your custom landing page routes visitors straight to checkout.",
+        howItHelps: "Completes your end-to-end sales funnel from visitor landing page to instant digital delivery."
+      },
+      {
+        day: 24, dateLabel: "Dec 14", week: "Week 4", skill: "Storefront & Portfolio",
+        study: "Gumroad Workflows & Email Sequences",
+        build: "Set up 3-email automated welcome sequence",
+        status: "Pending", score: 0,
+        summary: "Configure an automated 3-email Gumroad workflow that nurtures free sample downloaders into paid buyers.",
+        resourceTitle: "Gumroad Workflows Help & Tutorials",
+        resourceUrl: "https://gumroad.com/",
+        whatResourceProvides: "Built-in automated email sequences triggered whenever someone downloads your free lead magnet.",
+        howItHelps: "Builds trust automatically in the background without requiring any phone calls or manual follow-ups."
+      },
+      {
+        day: 25, dateLabel: "Dec 15", week: "Week 4", skill: "Faceless Content",
+        study: "Greg Isenberg Faceless Channel Guide",
+        build: "Launch faceless social page + publish first 2 posts",
+        status: "Pending", score: 0,
+        summary: "Create your dedicated faceless Instagram/Shorts/LinkedIn page, add your landing page link, and publish 2 posts.",
+        resourceTitle: "Greg Isenberg YouTube Channel (Micro-Brands & Traffic)",
+        resourceUrl: "https://www.youtube.com/@GregIsenberg/videos",
+        whatResourceProvides: "Playbooks on growing niche theme pages and driving organic traffic to digital products.",
+        howItHelps: "Starts bringing free, targeted visitors to your landing page every day."
+      },
+      {
+        day: 26, dateLabel: "Dec 16", week: "Week 4", skill: "Faceless Content",
+        study: "Content Batching Workflow",
+        build: "Batch-produce 14 days of carousels & short videos",
+        status: "Pending", score: 0,
+        summary: "Use your Google Sheets + Make.com automation and Canva templates to batch-create 2 weeks of content in 2 hours.",
+        resourceTitle: "Make.com Free Automation Workspace",
+        resourceUrl: "https://www.make.com/",
+        whatResourceProvides: "Automated batch generation of post hooks, captions, and carousel outlines.",
+        howItHelps: "Keeps your faceless social channel active consistently while fitting easily into your 2-hour evening schedule."
+      },
+      {
+        day: 27, dateLabel: "Dec 17", week: "Week 4", skill: "Storefront & Portfolio",
+        study: "Freelance Portfolio Strategy",
+        build: "Build 1-page Freelance Portfolio showing badges & builds",
+        status: "Pending", score: 0,
+        summary: "Build a clean 1-page freelance portfolio showcasing your 2 Google Cloud badges, PDF Playbook, Landing Page, and Mini App.",
+        resourceTitle: "CodeWithHarry YouTube (Portfolio & Career Tips)",
+        resourceUrl: "https://www.youtube.com/@CodeWithHarry/videos",
+        whatResourceProvides: "Guidance on presenting real-world built projects to win remote freelance work.",
+        howItHelps: "Positions you to earn remote freelance income building landing pages, PDFs, and AI tools via written chat."
+      },
+      {
+        day: 28, dateLabel: "Dec 18", week: "Week 4", skill: "Storefront & Portfolio",
+        study: "Nick Saraev Written Proposals",
+        build: "Create Proposal Writer Gem + Contra.com profile",
+        status: "Pending", score: 0,
+        summary: "Set up a 0%-commission profile on Contra.com and create a Proposal Writer Gem for introvert-friendly written outreach.",
+        resourceTitle: "Contra.com Commission-Free Freelance Platform",
+        resourceUrl: "https://contra.com/",
+        whatResourceProvides: "Modern visual portfolio and freelance marketplace with zero platform commission fees.",
+        howItHelps: "Lets you pitch and deliver AI design and no-code web services completely over text/email."
+      },
+      {
+        day: 29, dateLabel: "Dec 19", week: "Week 4", skill: "Storefront & Portfolio",
+        study: "End-to-End Funnel Stress Test",
+        build: "Test every link on mobile + share free tool in 3 communities",
+        status: "Pending", score: 0,
+        summary: "Test your entire mobile journey from social bio to Gumroad checkout and share your free mini app in 3 communities.",
+        resourceTitle: "Your Live Lovable + Gumroad Funnel",
+        resourceUrl: "https://gumroad.com/",
+        whatResourceProvides: "Real-world user feedback and initial organic traffic to your free tool and lead magnet.",
+        howItHelps: "Catches any broken links on mobile and gets your first real users testing what you built."
+      },
+      {
+        day: 30, dateLabel: "Dec 20", week: "Week 4", skill: "Storefront & Portfolio",
+        study: "Tina Huang AI Roadmap Reflection",
+        build: "Final backup of all assets + 60-day scaling plan",
+        status: "Pending", score: 0,
+        summary: "Complete a full backup of all your 30-day assets in Google Drive and map out your next 60-day income scaling roadmap.",
+        resourceTitle: "Tina Huang YouTube Channel (AI Career Roadmaps)",
+        resourceUrl: "https://www.youtube.com/c/tinahuang1/videos",
+        whatResourceProvides: "Long-term career positioning advice on continuing to build practical AI skills and digital products.",
+        howItHelps: "Gives you a clear post-graduation plan to grow your Gumroad product sales and remote freelance income."
+      }
+    ];
+
+    let roadmapData = JSON.parse(localStorage.getItem('aiMasteryRoadmap_v7')) || JSON.parse(JSON.stringify(initialRoadmap));
+    let expandedSkill = "Gemini Pro & Research";
+    let selectedCalDay = 5; // Default to Day 05 (Next Action)
+    let showNoActionForm = false;
+    let isDarkMode = (localStorage.getItem('aiMasteryTheme_v7') || 'dark') === 'dark';
+    const driveFolderUrl = "https://drive.google.com/drive/folders/1iBaU7EShNjqYbl3l4MqVx_Q2sqC0FLNK";
+
+    function applyTheme() {
+      const htmlEl = document.documentElement;
+      const toggleBtn = document.getElementById('theme-toggle-btn');
+      if (isDarkMode) {
+        htmlEl.classList.add('dark');
+        if (toggleBtn) toggleBtn.textContent = '☀ Light Mode';
+      } else {
+        htmlEl.classList.remove('dark');
+        if (toggleBtn) toggleBtn.textContent = '🌙 Night Mode';
+      }
+    }
+
+    function toggleThemeMode() {
+      isDarkMode = !isDarkMode;
+      localStorage.setItem('aiMasteryTheme_v7', isDarkMode ? 'dark' : 'light');
+      applyTheme();
+    }
+
+    function saveState() {
+      localStorage.setItem('aiMasteryRoadmap_v7', JSON.stringify(roadmapData));
+      renderAll();
+    }
+
+    function openKpiModal(type) {
+      const modal = document.getElementById('kpi-modal');
+      const titleEl = document.getElementById('kpi-modal-title');
+      const bodyEl = document.getElementById('kpi-modal-body');
+
+      const completedItems = roadmapData.filter(d => d.status === 'Completed');
+      const missedItems = roadmapData.filter(d => d.status === 'Missed');
+      const pendingItems = roadmapData.filter(d => d.status === 'Pending');
+
+      if (type === 'portfolio') {
+        titleEl.textContent = "Portfolio Assets Built & Saved in Drive (View-Only)";
+        const assetCards = completedItems.map(d => `
+          <div class="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-emerald-100 text-emerald-900 dark:bg-emerald-500/20 dark:text-emerald-300">Day ${d.day} • ${d.dateLabel}</span>
+                <span class="text-xs font-semibold text-zinc-500 dark:text-zinc-400">${d.skill}</span>
+              </div>
+              <h4 class="text-sm font-bold text-zinc-900 dark:text-white mt-1">${d.build}</h4>
+              <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-0.5">Learned from: <a href="${d.resourceUrl}" target="_blank" class="text-cyan-700 dark:text-cyan-400 font-semibold underline">${d.resourceTitle} ↗</a></p>
+            </div>
+            <a href="${driveFolderUrl}" target="_blank" rel="noopener noreferrer" class="shrink-0 inline-flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-lg bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white shadow-sm transition">
+              <span>✓ Saved in Drive</span>
+              <span>↗</span>
+            </a>
+          </div>
+        `).join('');
+
+        bodyEl.innerHTML = `
+          <p class="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300">All 4 completed milestones below belong in your <strong>00_30- Day Ai Mastery Portfolio</strong> folder. Tap any <strong>Saved in Drive</strong> button to open your Google Drive folder directly.</p>
+          <div class="space-y-3">${assetCards || '<p class="text-sm text-zinc-500">No assets completed yet.</p>'}</div>
+          <div class="p-3.5 rounded-xl bg-violet-50 dark:bg-violet-950/60 border border-violet-200 dark:border-violet-500/40 text-xs text-violet-900 dark:text-violet-200">
+            <strong>Next Portfolio Asset to Unlock:</strong> Day 05 — NotebookLM 5-Chapter Playbook Outline.
+          </div>
+        `;
+      } else if (type === 'improve') {
+        titleEl.textContent = "Where to Improve Next — Mentor Guidance";
+        bodyEl.innerHTML = `
+          <div class="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-500/40 space-y-1.5">
+            <h4 class="text-sm font-bold text-emerald-900 dark:text-emerald-300">✓ Days 1–4 All Verified at 5.0 / 5.0!</h4>
+            <p class="text-xs sm:text-sm text-zinc-700 dark:text-zinc-200 leading-relaxed">
+              You have completed 2 Google Cloud Badges, 5 Master Prompts, 6 Custom Gemini Skills, and your Day 04 Deep Research market scan.
+            </p>
+          </div>
+          <div class="p-4 rounded-xl bg-cyan-50/70 dark:bg-cyan-950/40 border border-cyan-200 dark:border-cyan-500/40 space-y-2">
+            <h4 class="text-sm font-bold text-cyan-900 dark:text-cyan-300">Next Priority: Day 05 NotebookLM &amp; Playbook Outline</h4>
+            <p class="text-xs sm:text-sm text-zinc-700 dark:text-zinc-200 leading-relaxed">
+              <strong>Gemini Pro &amp; Research</strong> is at 40% completion (2/5 tasks). Focus on these three simple steps:
+            </p>
+            <ul class="list-disc pl-5 text-xs sm:text-sm text-zinc-700 dark:text-zinc-200 space-y-1">
+              <li>Save your Day 04 Deep Research output into Google Drive (<code>07- Resources</code>).</li>
+              <li>Open <strong>NotebookLM</strong> and upload your Deep Research doc + 5 YouTube videos on your Playbook niche.</li>
+              <li>Generate a clean <strong>5-Chapter Playbook Outline</strong> so you are ready to draft on Day 06.</li>
+            </ul>
+          </div>
+        `;
+      } else if (type === 'completion') {
+        titleEl.textContent = "Overall 30-Day Completion Breakdown (View-Only)";
+        bodyEl.innerHTML = `
+          <div class="grid grid-cols-3 gap-3 text-center">
+            <div class="p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-500/40">
+              <div class="text-2xl font-bold text-emerald-800 dark:text-emerald-300">${completedItems.length}</div>
+              <div class="text-xs font-semibold text-emerald-700 dark:text-emerald-400 mt-0.5">Completed Days</div>
+            </div>
+            <div class="p-3.5 rounded-xl bg-[#c2593f]/15 dark:bg-[#c2593f]/25 border border-[#c2593f]/30 dark:border-[#e06d53]/50">
+              <div class="text-2xl font-bold text-[#9a3f28] dark:text-orange-300">${missedItems.length}</div>
+              <div class="text-xs font-semibold text-[#9a3f28] dark:text-orange-300 mt-0.5">Catch-Up Days</div>
+            </div>
+            <div class="p-3.5 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+              <div class="text-2xl font-bold text-zinc-800 dark:text-white">${pendingItems.length}</div>
+              <div class="text-xs font-semibold text-zinc-600 dark:text-zinc-400 mt-0.5">Upcoming Days</div>
+            </div>
+          </div>
+          <p class="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
+            You have completed <strong>${completedItems.length} out of 30 days</strong> (${((completedItems.length / 30) * 100).toFixed(1)}%). Tap any date on the <strong>Interactive 30-Day Calendar Plan</strong> below to inspect completed work or log progress.
+          </p>
+        `;
+      } else if (type === 'confidence') {
+        titleEl.textContent = "Skill Confidence Ratings (View-Only Progress)";
+        const ratingRows = completedItems.map(d => {
+          const ratingLabel = d.score === 5 ? 'Mastered' : d.score === 4 ? 'Good' : d.score === 3 ? 'Okay' : 'Needs Review';
+          const badgeStyle = d.score >= 4
+            ? 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-500/40'
+            : 'bg-[#c2593f]/15 text-[#9a3f28] border-[#c2593f]/30 dark:bg-[#c2593f]/25 dark:text-orange-300 dark:border-[#e06d53]/50';
+          return `
+            <div class="flex items-center justify-between p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-xs sm:text-sm">
+              <div>
+                <span class="font-bold text-zinc-900 dark:text-white">Day ${d.day} (${d.dateLabel}):</span>
+                <span class="text-zinc-700 dark:text-zinc-300">${d.study}</span>
+              </div>
+              <span class="shrink-0 px-3 py-1 rounded-full border text-xs font-bold ${badgeStyle}">
+                ${d.score} / 5 • ${ratingLabel}
+              </span>
+            </div>
+          `;
+        }).join('');
+
+        bodyEl.innerHTML = `
+          <p class="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300">All 4 completed milestones are rated <strong>5.0 / 5.0</strong>!</p>
+          <div class="space-y-2.5">${ratingRows}</div>
+        `;
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeKpiModal() {
+      document.getElementById('kpi-modal').classList.add('hidden');
+    }
+
+    function renderKPIs() {
+      const total = roadmapData.length;
+      const completedItems = roadmapData.filter(d => d.status === 'Completed');
+      const completedCount = completedItems.length;
+      const pct = ((completedCount / total) * 100).toFixed(1);
+
+      document.getElementById('kpi-percent').textContent = `${pct}%`;
+      document.getElementById('kpi-days').textContent = `(${completedCount} / ${total} Days)`;
+      document.getElementById('kpi-progress-bar').style.width = `${pct}%`;
+      document.getElementById('kpi-assets').textContent = completedCount;
+
+      const scoredItems = completedItems.filter(d => d.score > 0);
+      const avgScore = scoredItems.length
+        ? (scoredItems.reduce((sum, item) => sum + item.score, 0) / scoredItems.length).toFixed(1)
+        : "0.0";
+      document.getElementById('kpi-confidence').textContent = avgScore;
+
+      document.getElementById('kpi-weakest').textContent = "Day 05: NotebookLM";
+    }
+
+    function selectSkill(skillName) {
+      expandedSkill = (expandedSkill === skillName) ? null : skillName;
+      renderSkillRadar();
+    }
+
+    function renderSkillRadar() {
+      const verticalContainer = document.getElementById('vertical-skills-chart');
+      const listContainer = document.getElementById('skills-container');
+      const activeLabel = document.getElementById('active-skill-label');
+
+      verticalContainer.innerHTML = '';
+      listContainer.innerHTML = '';
+
+      activeLabel.textContent = expandedSkill ? `Selected: ${expandedSkill}` : 'Select a skill bar below';
+
+      const skillGroups = [
+        { name: "Prompt Engineering", short: "Prompts" },
+        { name: "Gemini Pro & Research", short: "Gemini" },
+        { name: "Canva & Design", short: "Canva" },
+        { name: "Faceless Content", short: "Faceless" },
+        { name: "No-Code Apps & Web", short: "Apps/Web" },
+        { name: "AI Automation", short: "Automate" },
+        { name: "Storefront & Portfolio", short: "Launch" }
+      ];
+
+      skillGroups.forEach(group => {
+        const items = roadmapData.filter(d => d.skill === group.name);
+        const done = items.filter(d => d.status === 'Completed').length;
+        const total = items.length;
+        const pct = Math.round((done / total) * 100);
+        const isSelected = expandedSkill === group.name;
+
+        const barColor = pct === 100
+          ? 'bg-emerald-500'
+          : pct > 0
+            ? 'bg-gradient-to-t from-cyan-500 to-violet-500'
+            : 'bg-zinc-300 dark:bg-zinc-700';
+        const ringClass = isSelected
+          ? 'ring-2 ring-cyan-500 bg-cyan-50/70 dark:bg-cyan-950/40'
+          : 'hover:bg-zinc-100 dark:hover:bg-zinc-800/70';
+
+        // Vertical 100% Column
+        const col = document.createElement('button');
+        col.onclick = () => selectSkill(group.name);
+        col.className = `flex flex-col items-center justify-end h-full p-1.5 rounded-xl transition cursor-pointer ${ringClass}`;
+        col.innerHTML = `
+          <span class="text-[11px] font-bold ${isSelected ? 'text-cyan-700 dark:text-cyan-300' : 'text-zinc-700 dark:text-zinc-300'} mb-1">${pct}%</span>
+          <div class="w-6 sm:w-8 h-24 bg-zinc-200/80 dark:bg-zinc-800 rounded-lg overflow-hidden flex items-end p-0.5">
+            <div class="w-full ${barColor} rounded-md transition-all duration-500" style="height: ${Math.max(pct, 6)}%"></div>
+          </div>
+          <span class="text-[10px] sm:text-[11px] font-semibold ${isSelected ? 'text-cyan-900 dark:text-cyan-200' : 'text-zinc-600 dark:text-zinc-400'} mt-1.5 truncate w-full text-center">${group.short}</span>
+        `;
+        verticalContainer.appendChild(col);
+
+        // Expandable Skill Header + Topic Submenu
+        const scored = items.filter(d => d.status === 'Completed' && d.score > 0);
+        const avg = scored.length ? (scored.reduce((a, b) => a + b.score, 0) / scored.length).toFixed(1) : '—';
+
+        let badgeClass = 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400';
+        let statusText = 'Upcoming';
+        if (pct === 100) {
+          badgeClass = 'bg-emerald-50 text-emerald-800 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-500/40';
+          statusText = 'Mastered';
+        } else if (done > 0) {
+          badgeClass = 'bg-violet-50 text-violet-800 border border-violet-200 dark:bg-violet-950/60 dark:text-violet-300 dark:border-violet-500/40';
+          statusText = 'Active Focus';
+        }
+
+        const card = document.createElement('div');
+        card.className = `rounded-xl border transition ${isSelected ? 'border-cyan-500 bg-cyan-50/20 dark:bg-cyan-950/20' : 'border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#121216]'}`;
+
+        const subItemsHtml = isSelected ? `
+          <div class="px-3.5 pb-3.5 pt-2 border-t border-zinc-200/80 dark:border-zinc-800 space-y-2 bg-zinc-50/70 dark:bg-zinc-900/60 rounded-b-xl">
+            ${items.map(item => {
+              const isDone = item.status === 'Completed';
+              const isMissed = item.status === 'Missed';
+              const rowBg = isMissed
+                ? 'bg-[#c2593f]/10 dark:bg-[#c2593f]/20 border-[#c2593f]/30 dark:border-[#e06d53]/50'
+                : 'bg-white dark:bg-[#121216] border-zinc-200 dark:border-zinc-800';
+              return `
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2.5 rounded-lg border ${rowBg} text-xs">
+                  <div class="flex items-start gap-2.5">
+                    <button onclick="toggleDayStatus(${item.day})" class="mt-0.5 w-4 h-4 rounded flex items-center justify-center border ${isDone ? 'bg-emerald-600 border-emerald-600 text-white' : isMissed ? 'bg-[#c2593f] border-[#c2593f] text-white' : 'border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900'}">
+                      ${isDone ? '✓' : isMissed ? '!' : ''}
+                    </button>
+                    <div>
+                      <div class="font-semibold text-zinc-900 dark:text-white">Day ${item.day} (${item.dateLabel}): ${item.study}</div>
+                      <div class="text-zinc-500 dark:text-zinc-400 mt-0.5">Build: ${item.build}</div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
+                    <a href="${item.resourceUrl}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-md bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 font-semibold">
+                      Open Link ↗
+                    </a>
+                    <button type="button" onclick="selectCalendarDay(${item.day}, true)" class="px-2.5 py-1 rounded-md bg-cyan-50 hover:bg-cyan-100 dark:bg-cyan-500/15 dark:hover:bg-cyan-500/25 text-cyan-800 dark:text-cyan-300 font-semibold cursor-pointer">
+                      Details
+                    </button>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        ` : '';
+
+        card.innerHTML = `
+          <button onclick="selectSkill('${group.name}')" class="w-full px-4 py-3 flex items-center justify-between text-left">
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <span class="font-bold text-xs sm:text-sm text-zinc-900 dark:text-white">${group.name}</span>
+              <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold ${badgeClass}">${statusText}</span>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+              <span class="text-zinc-500 dark:text-zinc-400 hidden sm:inline">Score: <strong class="text-zinc-800 dark:text-zinc-200">${avg}/5</strong></span>
+              <span class="font-bold text-zinc-800 dark:text-zinc-200">${done}/${total} (${pct}%)</span>
+              <span class="text-zinc-400 font-bold">${isSelected ? '▲' : '▼'}</span>
+            </div>
+          </button>
+          ${subItemsHtml}
+        `;
+        listContainer.appendChild(card);
+      });
+    }
+
+    function selectCalendarDay(dayNum, shouldScroll = false) {
+      selectedCalDay = dayNum;
+      showNoActionForm = false;
+      renderCalendar();
+      if (shouldScroll) {
+        const detailPanel = document.getElementById('calendar-detail-panel');
+        if (detailPanel) {
+          detailPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+    }
+
+    function toggleNoActionForm() {
+      showNoActionForm = !showNoActionForm;
+      renderCalendar();
+    }
+
+    function saveNoActionReflection(dayNum) {
+      const reason = document.getElementById('na-reason').value;
+      const part = document.getElementById('na-part').value;
+      const recovery = document.getElementById('na-recovery').value.trim() || "Complete a 45-minute catch-up session tomorrow.";
+
+      const item = roadmapData.find(d => d.day === dayNum);
+      if (!item) return;
+
+      item.status = 'Missed';
+      item.score = 0;
+      item.missedReason = reason;
+      item.missedPart = part;
+      item.recoveryPlan = recovery;
+      item.habitImpact = `Skipping Day ${item.day} (${item.dateLabel}) breaks your daily 3-hour builder momentum and delays "${item.build}". When a session is skipped without an immediate catch-up slot, skills in ${item.skill} take longer to stick.`;
+
+      showNoActionForm = false;
+      saveState();
+    }
+
+    function renderCalendar() {
+      const grid = document.getElementById('calendar-grid');
+      const detailPanel = document.getElementById('calendar-detail-panel');
+      grid.innerHTML = '';
+
+      const calendarSlots = [
+        { type: 'day', day: 1, num: '2', month: 'Nov' },
+        { type: 'day', day: 2, num: '3', month: 'Nov' },
+        { type: 'break', label: 'Nov 4–16', note: 'Diwali Break' },
+        { type: 'day', day: 3, num: '17', month: 'Nov' },
+        { type: 'day', day: 4, num: '24', month: 'Nov' },
+        { type: 'day', day: 5, num: '25', month: 'Nov', isToday: true },
+        { type: 'day', day: 6, num: '26', month: 'Nov' },
+        { type: 'day', day: 7, num: '27', month: 'Nov' },
+        { type: 'day', day: 8, num: '28', month: 'Nov' },
+        { type: 'day', day: 9, num: '29', month: 'Nov' },
+        { type: 'day', day: 10, num: '30', month: 'Nov' },
+        { type: 'day', day: 11, num: '1', month: 'Dec' },
+        { type: 'day', day: 12, num: '2', month: 'Dec' },
+        { type: 'day', day: 13, num: '3', month: 'Dec' },
+        { type: 'day', day: 14, num: '4', month: 'Dec' },
+        { type: 'day', day: 15, num: '5', month: 'Dec' },
+        { type: 'day', day: 16, num: '6', month: 'Dec' },
+        { type: 'day', day: 17, num: '7', month: 'Dec' },
+        { type: 'day', day: 18, num: '8', month: 'Dec' },
+        { type: 'day', day: 19, num: '9', month: 'Dec' },
+        { type: 'day', day: 20, num: '10', month: 'Dec' },
+        { type: 'day', day: 21, num: '11', month: 'Dec' },
+        { type: 'day', day: 22, num: '12', month: 'Dec' },
+        { type: 'day', day: 23, num: '13', month: 'Dec' },
+        { type: 'day', day: 24, num: '14', month: 'Dec' },
+        { type: 'day', day: 25, num: '15', month: 'Dec' },
+        { type: 'day', day: 26, num: '16', month: 'Dec' },
+        { type: 'day', day: 27, num: '17', month: 'Dec' },
+        { type: 'day', day: 28, num: '18', month: 'Dec' },
+        { type: 'day', day: 29, num: '19', month: 'Dec' },
+        { type: 'day', day: 30, num: '20', month: 'Dec' }
+      ];
+
+      calendarSlots.forEach(slot => {
+        if (slot.type === 'break') {
+          const div = document.createElement('div');
+          div.className = 'rounded-xl bg-amber-50/80 dark:bg-amber-950/30 border border-dashed border-amber-300 dark:border-amber-500/40 p-1.5 flex flex-col items-center justify-center text-center min-h-[54px]';
+          div.innerHTML = `
+            <span class="text-[10px] font-bold text-amber-800 dark:text-amber-300">${slot.label}</span>
+            <span class="text-[9px] text-amber-700 dark:text-amber-400/80 leading-tight mt-0.5">${slot.note}</span>
+          `;
+          grid.appendChild(div);
+          return;
+        }
+
+        const item = roadmapData.find(d => d.day === slot.day);
+        const isDone = item.status === 'Completed';
+        const isMissed = item.status === 'Missed';
+        const isSelected = selectedCalDay === slot.day;
+
+        let cellStyle = 'bg-white dark:bg-[#121216] border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 hover:border-cyan-500';
+        let dotHtml = '<span class="w-1.5 h-1.5 rounded-full bg-zinc-300 dark:bg-zinc-600"></span>';
+
+        if (isDone) {
+          cellStyle = 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-500/50 text-emerald-950 dark:text-emerald-200';
+          dotHtml = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>';
+        } else if (isMissed) {
+          cellStyle = 'bg-[#c2593f]/15 dark:bg-[#c2593f]/25 border-[#c2593f] dark:border-[#e06d53] text-[#7c3220] dark:text-orange-200';
+          dotHtml = '<span class="w-1.5 h-1.5 rounded-full bg-[#e06d53]"></span>';
+        }
+
+        if (slot.isToday) {
+          cellStyle += ' ring-2 ring-violet-500 dark:ring-violet-400';
+        }
+        if (isSelected) {
+          cellStyle += ' ring-2 ring-cyan-500 dark:ring-white shadow-sm scale-[1.02]';
+        }
+
+        const btn = document.createElement('button');
+        btn.onclick = () => selectCalendarDay(slot.day);
+        btn.className = `rounded-xl border p-1.5 flex flex-col items-center justify-center min-h-[54px] transition cursor-pointer ${cellStyle}`;
+        btn.innerHTML = `
+          <div class="w-full flex items-center justify-between text-[9px] font-semibold opacity-75">
+            <span>D${slot.day}</span>
+            ${dotHtml}
+          </div>
+          <div class="text-xs sm:text-sm font-bold leading-none mt-1">${slot.num} <span class="text-[9px] font-normal">${slot.month}</span></div>
+          ${slot.isToday ? '<div class="text-[8px] font-bold uppercase tracking-tighter text-violet-700 dark:text-violet-300 mt-0.5">NEXT</div>' : ''}
+        `;
+        grid.appendChild(btn);
+      });
+
+      // Render Selected Date Detail Panel
+      const activeItem = roadmapData.find(d => d.day === selectedCalDay) || roadmapData[0];
+      const isDone = activeItem.status === 'Completed';
+      const isMissed = activeItem.status === 'Missed';
+
+      let statusBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-violet-100 text-violet-900 border border-violet-300 dark:bg-violet-500/20 dark:text-violet-300 dark:border-violet-500/40">Pending</span>`;
+      if (isDone) {
+        statusBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-900 border border-emerald-300 dark:bg-emerald-500/20 dark:text-emerald-300 dark:border-emerald-500/40">✓ Completed</span>`;
+      } else if (isMissed) {
+        statusBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#c2593f] text-white">! No Action Taken</span>`;
+      }
+
+      const missedReflectionBlock = isMissed ? `
+        <div class="p-3.5 rounded-xl bg-[#c2593f]/10 dark:bg-[#c2593f]/20 border border-[#c2593f]/40 dark:border-[#e06d53]/60 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-[#9a3f28] dark:text-orange-300">No Action Taken • Saved Reflection</span>
+            <button onclick="toggleNoActionForm()" class="text-[11px] font-semibold underline text-[#9a3f28] dark:text-orange-300">Edit Note</button>
+          </div>
+          <div class="text-xs text-zinc-800 dark:text-zinc-200 space-y-1">
+            <p><strong>What happened:</strong> ${activeItem.missedReason || 'Skipped session'}</p>
+            <p><strong>Missed session:</strong> ${activeItem.missedPart || 'Both sessions'}</p>
+            <p><strong>Catch-up plan:</strong> ${activeItem.recoveryPlan || 'Complete tomorrow'}</p>
+          </div>
+          <div class="pt-2 border-t border-[#c2593f]/20 dark:border-[#e06d53]/30 text-xs text-[#7c3220] dark:text-orange-200 leading-relaxed">
+            <strong>How this habit affects your progress:</strong> ${activeItem.habitImpact}
+          </div>
+        </div>
+      ` : '';
+
+      const noActionFormBlock = showNoActionForm ? `
+        <div class="p-3.5 rounded-xl bg-[#c2593f]/10 dark:bg-[#c2593f]/20 border border-[#c2593f] dark:border-[#e06d53] space-y-2.5">
+          <div class="text-xs font-bold text-[#9a3f28] dark:text-orange-300">Quick Follow-Up: Why was no action taken on ${activeItem.dateLabel}?</div>
+          <div>
+            <label class="block text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 mb-1">1. What stopped you on this day?</label>
+            <select id="na-reason" class="w-full text-xs rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white px-2.5 py-1.5">
+              <option value="Too tired after government office duty">Too tired after government office duty</option>
+              <option value="Family / personal work came up">Family / personal work came up</option>
+              <option value="Felt overwhelmed / procrastinated starting">Felt overwhelmed / procrastinated starting</option>
+              <option value="Device / internet issue">Device / internet issue</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 mb-1">2. Which session was missed?</label>
+            <select id="na-part" class="w-full text-xs rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white px-2.5 py-1.5">
+              <option value="Both Phone (1h) & Laptop (2h) Sessions">Both Phone (1h) & Laptop (2h) Sessions</option>
+              <option value="Missed Evening Laptop Build (2h) only">Missed Evening Laptop Build (2h) only</option>
+              <option value="Missed Office Phone Study (1h) only">Missed Office Phone Study (1h) only</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-zinc-700 dark:text-zinc-300 mb-1">3. When will you recover this task?</label>
+            <input id="na-recovery" type="text" placeholder="E.g., Tomorrow during 1-hr office break + 1 hr at night" class="w-full text-xs rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white px-2.5 py-1.5" />
+          </div>
+          <div class="flex items-center gap-2 pt-1">
+            <button onclick="saveNoActionReflection(${activeItem.day})" class="flex-1 py-2 rounded-lg bg-[#c2593f] hover:bg-[#a94830] text-white text-xs font-bold">
+              Save Terracotta Reflection
+            </button>
+            <button onclick="toggleNoActionForm()" class="px-3 py-2 rounded-lg bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-xs font-semibold">
+              Cancel
+            </button>
+          </div>
+        </div>
+      ` : '';
+
+      detailPanel.innerHTML = `
+        <div class="space-y-3.5">
+          <div class="flex items-start justify-between gap-2 border-b border-zinc-200 dark:border-zinc-800 pb-3">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-cyan-700 dark:text-cyan-400">Day ${activeItem.day} • ${activeItem.dateLabel}, 2026 (${activeItem.week})</span>
+              <h3 class="text-base font-bold text-zinc-900 dark:text-white mt-0.5">${activeItem.study}</h3>
+              <span class="inline-block mt-1 px-2 py-0.5 rounded-md text-[11px] font-medium bg-zinc-200/80 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300">${activeItem.skill}</span>
+            </div>
+            ${statusBadge}
+          </div>
+
+          ${missedReflectionBlock}
+          ${noActionFormBlock}
+
+          <div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-zinc-400 mb-1">Short Summary of Day ${activeItem.day}</div>
+            <p class="text-xs sm:text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed">${activeItem.summary}</p>
+            <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-1.5"><strong>Evening Build:</strong> ${activeItem.build}</p>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-white dark:bg-[#121216] border border-zinc-200 dark:border-zinc-800 space-y-2">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-cyan-700 dark:text-cyan-400">Free Resource &amp; Tutorial</div>
+            <a href="${activeItem.resourceUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-cyan-700 dark:text-cyan-400 hover:underline">
+              <span>${activeItem.resourceTitle}</span>
+              <span>↗</span>
+            </a>
+            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              <strong>What it provides:</strong> ${activeItem.whatResourceProvides}
+            </p>
+            <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              <strong>How it helps your 30-day mastery:</strong> ${activeItem.howItHelps}
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-zinc-200 dark:border-zinc-800 grid grid-cols-2 gap-2">
+          <button onclick="toggleDayStatus(${activeItem.day})" class="py-2.5 px-3 rounded-xl text-xs font-bold transition ${isDone ? 'bg-zinc-200 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-300 dark:hover:bg-zinc-700' : 'bg-gradient-to-r from-cyan-600 to-teal-600 text-white hover:from-cyan-500 hover:to-teal-500 shadow-sm'}">
+            ${isDone ? 'Mark as Pending' : '✓ Mark Completed'}
+          </button>
+          <button onclick="toggleNoActionForm()" class="py-2.5 px-3 rounded-xl text-xs font-bold transition bg-[#c2593f]/15 dark:bg-[#c2593f]/25 hover:bg-[#c2593f]/25 dark:hover:bg-[#c2593f]/35 text-[#9a3f28] dark:text-orange-300 border border-[#c2593f]/40 dark:border-[#e06d53]/60">
+            ! Log No Action
+          </button>
+        </div>
+      `;
+    }
+
+    function toggleDayStatus(dayNum) {
+      const item = roadmapData.find(d => d.day === dayNum);
+      if (!item) return;
+
+      if (item.status === 'Completed') {
+        item.status = 'Pending';
+        item.score = 0;
+      } else {
+        item.status = 'Completed';
+        if (item.score === 0) item.score = 5;
+      }
+      saveState();
+    }
+
+    function markNextDayComplete() {
+      const nextPending = roadmapData.find(d => d.status === 'Pending' || d.status === 'Missed');
+      if (!nextPending) return;
+      nextPending.status = 'Completed';
+      if (nextPending.score === 0) nextPending.score = 5;
+      selectedCalDay = nextPending.day;
+      saveState();
+    }
+
+    function resetToDefault() {
+      localStorage.removeItem('aiMasteryRoadmap_v7');
+      roadmapData = JSON.parse(JSON.stringify(initialRoadmap));
+      selectedCalDay = 5;
+      showNoActionForm = false;
+      renderAll();
+    }
+
+    function renderAll() {
+      applyTheme();
+      renderKPIs();
+      renderSkillRadar();
+      renderCalendar();
+    }
+
+    renderAll();
+  </script>
+</body>
+</html>
